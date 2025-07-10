@@ -27,5 +27,5 @@ async function connectToAvailableHost() {
   throw new Error('❌ Aucun hôte MariaDB disponible.');
 }
 
-// Exporte une promesse de pool
+
 module.exports = connectToAvailableHost();
