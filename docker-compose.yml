@@ -1,0 +1,59 @@
+version: '3.7'
+
+services:
+  mariadb1:
+    image: bitnami/mariadb-galera:latest
+    environment:
+      - MARIADB_ROOT_PASSWORD=password
+      - MARIADB_DATABASE=reservation_db
+      - MARIADB_GALERA_CLUSTER_NAME=xeilos_cluster
+      - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://mariadb2,mariadb3
+      - MARIADB_GALERA_NODE_NAME=mariadb1
+      - MARIADB_GALERA_FORCE_SAFETOBOOTSTRAP=yes
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_GALERA_FORCE_SAFETOBOOTSTRAP=yes
+    ports:
+      - "3306:3306"
+    networks:
+      - galera
+    volumes:
+      - ./app/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  mariadb2:
+    image: bitnami/mariadb-galera:latest
+    environment:
+      - MARIADB_ROOT_PASSWORD=password
+      - MARIADB_DATABASE=reservation_db
+      - MARIADB_GALERA_CLUSTER_NAME=xeilos_cluster
+      - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://mariadb1,mariadb3
+      - MARIADB_GALERA_NODE_NAME=mariadb2
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - galera
+
+  mariadb3:
+    image: bitnami/mariadb-galera:latest
+    environment:
+      - MARIADB_ROOT_PASSWORD=password
+      - MARIADB_DATABASE=reservation_db
+      - MARIADB_GALERA_CLUSTER_NAME=xeilos_cluster
+      - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://mariadb1,mariadb2
+      - MARIADB_GALERA_NODE_NAME=mariadb3
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - galera
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3021:3021"
+    depends_on:
+      - mariadb1
+    networks:
+      - galera
+
+networks:
+  galera:
+    driver: bridge

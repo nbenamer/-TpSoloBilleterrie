@@ -1,0 +1,20 @@
+{
+  "name": "tp-reservation-cleaaaan",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+   "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.1.0",
+    "mysql2": "^3.14.1"
+  },
+  "devDependencies": {
+    "jest": "^30.0.4"
+  }
+}
